@@ -18,7 +18,6 @@ func TestTest_Validate(t *testing.T) {
 
 	test := &Test{
 		Timeout:      200,
-		Confirmation: 100,
 		Public:       200,
 		Virus:        200,
 		TestType:     "FTP",
@@ -36,7 +35,6 @@ func TestTest_Validate(t *testing.T) {
 	assert.Contains(message, "WebsiteName is required")
 	assert.Contains(message, "WebsiteURL is required")
 	assert.Contains(message, "Timeout must be 0 or between 6 and 99")
-	assert.Contains(message, "Confirmation must be between 0 and 9")
 	assert.Contains(message, "CheckRate must be between 0 and 23999")
 	assert.Contains(message, "Public must be 0 or 1")
 	assert.Contains(message, "Virus must be 0 or 1")
@@ -45,7 +43,6 @@ func TestTest_Validate(t *testing.T) {
 	assert.Contains(message, "TriggerRate must be between 0 and 59")
 
 	test.Timeout = 10
-	test.Confirmation = 2
 	test.Public = 1
 	test.Virus = 1
 	test.TestType = "HTTP"
@@ -68,10 +65,8 @@ func TestTest_ToURLValues(t *testing.T) {
 		WebsiteName:   "Foo Bar",
 		WebsiteURL:    "http://example.com",
 		Port:          3000,
-		NodeLocations: "foo",
 		Timeout:       11,
 		PingURL:       "http://example.com/ping",
-		Confirmation:  1,
 		CheckRate:     500,
 		BasicUser:     "myuser",
 		BasicPass:     "mypass",
@@ -95,10 +90,8 @@ func TestTest_ToURLValues(t *testing.T) {
 		"WebsiteName":   {"Foo Bar"},
 		"WebsiteURL":    {"http://example.com"},
 		"Port":          {"3000"},
-		"NodeLocations": {"foo"},
 		"Timeout":       {"11"},
 		"PingURL":       {"http://example.com/ping"},
-		"Confirmation":  {"1"},
 		"CheckRate":     {"500"},
 		"BasicUser":     {"myuser"},
 		"BasicPass":     {"mypass"},
@@ -257,6 +250,10 @@ func (c *fakeAPIClient) delete(path string, v url.Values) (*http.Response, error
 
 func (c *fakeAPIClient) get(path string) (*http.Response, error) {
 	return c.all("GET", path, nil)
+}
+
+func (c *fakeAPIClient) details(path string, v url.Values) (*http.Response, error) {
+	return c.all("GET", path, v)
 }
 
 func (c *fakeAPIClient) all(method string, path string, v url.Values) (*http.Response, error) {

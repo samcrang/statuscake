@@ -53,6 +53,7 @@ type apiClient interface {
 	get(string) (*http.Response, error)
 	delete(string, url.Values) (*http.Response, error)
 	put(string, url.Values) (*http.Response, error)
+	details(string, url.Values) (*http.Response, error)
 }
 
 // Client is the http client that wraps the remote API.
@@ -153,6 +154,15 @@ func (c *Client) put(path string, v url.Values) (*http.Response, error) {
 
 func (c *Client) delete(path string, v url.Values) (*http.Response, error) {
 	r, err := c.newRequest("DELETE", path, v, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return c.doRequest(r)
+}
+
+func (c *Client) details(path string, v url.Values) (*http.Response, error) {
+	r, err := c.newRequest("GET", path, v, nil)
 	if err != nil {
 		return nil, err
 	}

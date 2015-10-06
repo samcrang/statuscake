@@ -35,8 +35,8 @@ type Test struct {
 	// 7 Day Uptime
 	Uptime float64 `json:"Uptime"`
 
-	// Any test locations seperated by a comma (using the Node Location IDs)
-	NodeLocations string `json:"NodeLocations" querystring:"NodeLocations"`
+//	// Any test locations seperated by a comma (using the Node Location IDs)
+//	NodeLocations string `json:"NodeLocations" querystring:"NodeLocations"`
 
 	// Timeout in an int form representing seconds.
 	Timeout int `json:"Timeout" querystring:"Timeout"`
@@ -44,7 +44,7 @@ type Test struct {
 	// A URL to ping if a site goes down.
 	PingURL string `json:"PingURL" querystring:"PingURL"`
 
-	Confirmation int `json:"Confirmation" querystring:"Confirmation"`
+//	Confirmation int `json:"Confirmation" querystring:"Confirmation"`
 
 	// The number of seconds between checks.
 	CheckRate int `json:"CheckRate" querystring:"CheckRate"`
@@ -111,9 +111,9 @@ func (t *Test) Validate() error {
 		e["Timeout"] = "must be 0 or between 6 and 99"
 	}
 
-	if t.Confirmation < 0 || t.Confirmation > 9 {
-		e["Confirmation"] = "must be between 0 and 9"
-	}
+//	if t.Confirmation < 0 || t.Confirmation > 9 {
+//		e["Confirmation"] = "must be between 0 and 9"
+//	}
 
 	if t.CheckRate < 0 || t.CheckRate > 23999 {
 		e["CheckRate"] = "must be between 0 and 23999"
@@ -208,6 +208,7 @@ type Tests interface {
 	All() ([]*Test, error)
 	Put(*Test) (*Test, error)
 	Delete(TestID int) error
+	Details(TestID int) (*Test, error)
 }
 
 type tests struct {
@@ -274,4 +275,17 @@ func (tt *tests) Delete(testID int) error {
 	}
 
 	return nil
+}
+
+func (tt *tests) Details(testID int) (*Test, error) {
+	resp, err := tt.client.details("/Tests/Details", url.Values{"TestID": {fmt.Sprint(testID)}})
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	var test *Test
+	err = json.NewDecoder(resp.Body).Decode(&test)
+
+	return test, err
 }

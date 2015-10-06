@@ -179,6 +179,23 @@ func TestClient_delete(t *testing.T) {
 	assert.Equal("https://www.statuscake.com/API/hello?foo=bar", hc.requests[0].URL.String())
 }
 
+func TestClient_details(t *testing.T) {
+	require := require.New(t)
+	assert := assert.New(t)
+
+	c, err := New(Auth{Username: "random-user", Apikey: "my-pass"})
+	require.Nil(err)
+
+	hc := &fakeHTTPClient{}
+	c.c = hc
+
+	v := url.Values{"foo": {"bar"}}
+	c.details("/hello", v)
+	assert.Len(hc.requests, 1)
+	assert.Equal("GET", hc.requests[0].Method)
+	assert.Equal("https://www.statuscake.com/API/hello?foo=bar", hc.requests[0].URL.String())
+}
+
 func TestClient_Tests(t *testing.T) {
 	require := require.New(t)
 	assert := assert.New(t)
