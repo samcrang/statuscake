@@ -31,6 +31,7 @@ type detailResponse struct {
 	Timeout         int      `json:"Timeout"`
 	LogoImage       string   `json:"LogoImage"`
 	Confirmation    int      `json:"Confirmation,string"`
+	TriggerRate     int      `json:"TriggerRate,string"`
 	WebsiteHost     string   `json:"WebsiteHost"`
 	NodeLocations   []string `json:"NodeLocations"`
 	FindString      string   `json:"FindString"`
@@ -58,6 +59,7 @@ func (d *detailResponse) test() *Test {
 		Timeout:       d.Timeout,
 		LogoImage:     d.LogoImage,
 		Confirmation:  d.Confirmation,
+		TriggerRate:   d.TriggerRate,
 		WebsiteHost:   d.WebsiteHost,
 		NodeLocations: d.NodeLocations,
 		FindString:    d.FindString,

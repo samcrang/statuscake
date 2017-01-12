@@ -288,6 +288,7 @@ func TestTests_Detail_OK(t *testing.T) {
 	assert.Equal(test.WebsiteHost, "Various")
 	assert.Equal(test.FindString, "")
 	assert.Equal(test.DoNotFind, false)
+	assert.Equal(test.TriggerRate, 10)
 }
 
 type fakeAPIClient struct {
